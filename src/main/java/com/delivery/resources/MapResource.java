@@ -31,11 +31,43 @@ import com.j256.ormlite.stmt.PreparedQuery;
 @Produces({MediaType.APPLICATION_JSON, "application/vnd.delivery.v1"})
 public class MapResource {
 	
-	/**
-	 * 
-	 * @param map
-	 * @return
-	 */
+	/** 
+	  * Public: Action to create a map with given parameters.
+	  *
+	  * @param Map - Object with parameters.
+	  *        		:name - String for the map name.
+	  *        		:routes - An Array of route objects.
+	  *             	:origin - String with the origin route name.
+	  *             	:destination - String with the destination route name.
+	  *             	:distance - Integer with the distance between origin and destination.
+	  *
+	  * Examples:
+	  *   POST /maps
+	  *   Body:
+	  *   {
+	  *     "name": "Mapa SP",
+	  *     "routes": [
+	  *       {
+	  *         "origin": "Barueri",
+	  *         "destination": "Sao Paulo",
+	  *         "distance": 50
+	  *       },
+	  *       {
+	  *         "origin": "Osasco",
+	  *         "destination": "Sao Paulo",
+	  *         "distance": 30
+	  *       },
+	  *       {
+	  *         "origin": "Sao Paulo",
+	  *         "destination": "Santos",
+	  *         "distance": 100
+	  *       }
+	  *     ]
+	  *   }
+	  *
+	  * @return a json with the representation of the given map if created.
+	  * @return an exception json with status 422 if the map was not created.
+	*/
 	@POST
 	public Response create(@Valid final Map map) {
 		try {
@@ -49,9 +81,28 @@ public class MapResource {
 	}
 
 	/**
-	 * 
-	 * @param deliveryRoute
-	 * @return
+	  * Public: Action to find the most economical path for a given delivery.
+	  *
+	  * @param DeliveryRoute - Object with parameters.
+	  *        :name - String for the map name.
+	  *        :origin - String for the delivery origin.
+	  *        :destination - String for the delivery destination.
+	  *        :liter_price - String for the fuel price per liter.
+	  *        :autonomy - String for the autonomy of the transportation.
+	  *
+	  * Examples:
+	  *   POST /maps/estimate_delivery
+	  *   Body:
+	  *   {
+	  *     "name": "Mapa SP",
+	  *     "origin": "Barueri",
+	  *     "destination": "Sao Paulo",
+	  *     "liter_price": 2.50,
+	  *     "autonomy": 10
+	  *   }
+	  *
+	  * @return a json with the representation of the delivery route path with cost.
+	  * @return an exception json with status 404 if the map was not found.
 	 */
 	@POST
 	@Path("/estimate_delivery")
@@ -79,8 +130,11 @@ public class MapResource {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Public: Action to list all the maps registered.
+	 *
+	 * Examples: GET /maps
+	 *
+	 * @return a json with a list of all maps with routes.
 	 */
     @GET
     public Response getMap() {
